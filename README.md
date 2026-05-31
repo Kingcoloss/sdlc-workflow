@@ -1,0 +1,125 @@
+# sdlc-workflow
+
+Agile-Scrum SDLC orchestrator for any software project. Encodes a deterministic plan → execute → review flow as Workflow scripts, with hard user-approval gates between phases.
+
+## Why
+
+Most SDLC processes are described in prose (CLAUDE.md, AGENTS.md, README) but never get encoded as something the model can actually run. This plugin captures the structure as:
+
+- **3 Workflow scripts** (deterministic multi-agent orchestration)
+- **5 slash commands** that orchestrate gates and persist state between workflows
+- **Project-local config** at `.claude/sdlc.local.md` per project
+
+Same plugin works across all your projects — only the `sdlc.local.md` differs.
+
+## Slash commands
+
+| Command | Purpose | Gate |
+|---------|---------|------|
+| `/sdlc-plan <requirement>` | Research + breakdown + risk eval | Gate A (before execute) |
+| `/sdlc-execute` | Parallel develop fan-out + graphify update + multi-dim review + UAT plan | Gate B (Post-UAT-Approval) |
+| `/sdlc-review` | Standalone multi-dim review of any diff | None (advisory) |
+| `/sdlc-standup` | 4-section scrum status with optional time-budget execution | None |
+| `/sdlc-resume` | Resume in-progress SDLC by reading state | None |
+
+## Install
+
+This plugin is currently developed locally. Install options:
+
+### Option A — symlink (fastest)
+
+```bash
+ln -s ~/Documents/Private/claude-plugins/sdlc-workflow ~/.claude/plugins/local/sdlc-workflow
+```
+
+Then enable via `/plugin` in Claude Code.
+
+### Option B — local marketplace
+
+Add to your `~/.claude/marketplaces.json` (or `claude-plugins` settings):
+
+```json
+{
+  "name": "local-sdlc",
+  "type": "local",
+  "path": "~/Documents/Private/claude-plugins"
+}
+```
+
+Then `/plugin install sdlc-workflow`.
+
+## Configure per project
+
+Drop a `.claude/sdlc.local.md` into your project root (already gitignored). See `references/project-config.md` for the full schema. Minimal example:
+
+```yaml
+---
+projectName: my-app
+taskBoard: { type: clickup, listId: "900123456" }
+tools: [graphify, chrome-devtools]
+---
+```
+
+## Typical session
+
+```
+User: /sdlc-plan add user-profile photo upload with S3 backend
+  → Workflow runs (research → breakdown → risk eval)
+  → Returns plan with 5 tasks across 3 waves
+  → AskUserQuestion: approve breakdown? severity OK? answer open questions?
+User: approve + create ClickUp tasks
+  → Plan saved to .claude/sdlc-plan.json
+
+User: /sdlc-execute
+  → Workflow runs (5 sub-agents in 3 waves → graphify update → 5 review dims → UAT plan)
+  → Returns overall_status=ready-for-uat with UAT checklist
+  → User runs UAT, reports pass
+  → AskUserQuestion (Gate B): approve graphify/commit/board-update/standup?
+User: approve commit + graphify
+  → Commit lands, graphify updates
+```
+
+## Severity → worker model
+
+Defaults (override per project in `sdlc.local.md`):
+
+| Severity | Model | agentType | Use when |
+|----------|-------|-----------|----------|
+| urgent | opus | (direct) | Architecture-critical |
+| high | opus | `codex:codex-rescue` | Bounded high-risk |
+| normal | sonnet | (direct) | Bounded coding |
+| low | haiku | (direct) | Research/docs |
+
+## Files
+
+```
+sdlc-workflow/
+├── .claude-plugin/plugin.json
+├── workflows/
+│   ├── sdlc-plan.js
+│   ├── sdlc-execute.js
+│   └── sdlc-review.js
+├── skills/
+│   ├── sdlc-plan/SKILL.md
+│   ├── sdlc-execute/SKILL.md
+│   ├── sdlc-review/SKILL.md
+│   ├── sdlc-standup/SKILL.md
+│   └── sdlc-resume/SKILL.md
+├── references/
+│   ├── severity-matrix.md
+│   ├── sub-agent-wrap.md
+│   ├── post-uat-gates.md
+│   └── project-config.md
+└── README.md
+```
+
+## Design notes
+
+- Workflows are deterministic JS scripts — they fan out agents in `parallel()` / `pipeline()`, can't pause for user input mid-run, and return one structured result.
+- Hard gates (A and B) live in the slash commands (skills), not in the workflows — skills can use `AskUserQuestion`, workflows can't.
+- All paths use `${CLAUDE_PLUGIN_ROOT}` so the plugin is location-independent.
+- Workflows accept ALL project specifics via `args.config` — no hardcoded list IDs, paths, or tool names.
+
+## License
+
+MIT

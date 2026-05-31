@@ -1,0 +1,20 @@
+{
+  "name": "sdlc-workflow",
+  "version": "0.1.0",
+  "description": "Agile-Scrum SDLC orchestrator for any software project — split into plan/execute/review workflows with hard user-approval gates between phases.",
+  "author": {
+    "name": "kanganapong sriduang",
+    "email": "sridung1111@gmail.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "sdlc",
+    "agile",
+    "scrum",
+    "workflow",
+    "orchestration",
+    "code-review",
+    "uat",
+    "task-board"
+  ]
+}
