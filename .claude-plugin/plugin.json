@@ -1,7 +1,7 @@
 {
   "name": "sdlc-workflow",
-  "version": "0.1.0",
-  "description": "Agile-Scrum SDLC orchestrator for any software project — split into plan/execute/review workflows with hard user-approval gates between phases.",
+  "version": "0.2.0",
+  "description": "Agile-Scrum SDLC orchestrator for any software project — init/plan/execute/review/standup/resume slash commands with hard user-approval gates between workflow phases.",
   "author": {
     "name": "kanganapong sriduang",
     "email": "sridung1111@gmail.com"
@@ -15,6 +15,7 @@
     "orchestration",
     "code-review",
     "uat",
-    "task-board"
+    "task-board",
+    "project-init"
   ]
 }
