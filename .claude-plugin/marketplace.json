@@ -13,8 +13,8 @@
     {
       "name": "sdlc-workflow",
       "source": {
-        "source": "github",
-        "repo": "Kingcoloss/sdlc-workflow"
+        "source": "url",
+        "url": "https://github.com/Kingcoloss/sdlc-workflow.git"
       },
       "description": "Agile-Scrum SDLC orchestrator for any software project — init/plan/execute/triage/review workflows with hard user-approval gates.",
       "version": "0.3.0",
