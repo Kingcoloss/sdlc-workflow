@@ -62,11 +62,11 @@ This repo self-hosts a marketplace named **`kanganapong-private`** (`.claude-plu
 **From the GitHub repo (shareable):**
 
 ```
-/plugin marketplace add https://github.com/Kingcoloss/sdlc-workflow
+/plugin marketplace add Kingcoloss/sdlc-workflow
 /plugin install sdlc-workflow@kanganapong-private
 ```
 
-The marketplace entry fetches the plugin via a `github` source (`Kingcoloss/sdlc-workflow`), so URL-based adds resolve correctly (relative paths would not).
+Use the GitHub `owner/repo` shorthand (above). A full git URL works too **but must end in `.git`** — `…/sdlc-workflow.git` — otherwise Claude Code may treat the bare URL as a direct link to a hosted `marketplace.json` instead of cloning the repo. The marketplace entry fetches the plugin via a `github` source (`Kingcoloss/sdlc-workflow`), so git-based adds resolve correctly (relative paths would not).
 
 **From a local checkout:**
 
