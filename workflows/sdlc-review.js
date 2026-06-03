@@ -64,8 +64,9 @@ const VERDICT_SCHEMA = {
   },
 }
 
-const target = args && args.target
-const config = (args && args.config) || {}
+const _args = typeof args === 'string' ? JSON.parse(args) : args
+const target = _args && _args.target
+const config = (_args && _args.config) || {}
 if (!target || !target.description || !target.changed_files || target.changed_files.length === 0) {
   return { error: 'args.target.{description, changed_files} required' }
 }

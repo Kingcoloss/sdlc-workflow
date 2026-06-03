@@ -1,0 +1,38 @@
+{
+  "name": "kanganapong-private",
+  "id": "kanganapong-private",
+  "owner": {
+    "name": "kanganapong sriduang",
+    "email": "sridung1111@gmail.com"
+  },
+  "metadata": {
+    "description": "Private plugin marketplace — SDLC orchestration and related tooling.",
+    "version": "0.2.0"
+  },
+  "plugins": [
+    {
+      "name": "sdlc-workflow",
+      "source": {
+        "source": "github",
+        "repo": "Kingcoloss/sdlc-workflow"
+      },
+      "description": "Agile-Scrum SDLC orchestrator for any software project — init/plan/execute/triage/review workflows with hard user-approval gates.",
+      "version": "0.3.0",
+      "author": {
+        "name": "kanganapong sriduang",
+        "email": "sridung1111@gmail.com"
+      },
+      "keywords": [
+        "sdlc",
+        "agile",
+        "scrum",
+        "workflow",
+        "orchestration",
+        "code-review",
+        "triage",
+        "uat"
+      ],
+      "category": "workflow"
+    }
+  ]
+}

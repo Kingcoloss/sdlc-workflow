@@ -60,6 +60,16 @@ This file is consumed by /sdlc-plan and /sdlc-execute. Per-developer overrides
 go here; team-level conventions belong in the project's CLAUDE.md.
 ```
 
+## Triage inbox tag (`/sdlc-triage`)
+
+`/sdlc-triage` can pull findings already logged on the board. The convention is the tag **`triage-inbox`**:
+
+- Tag any board task `triage-inbox` to mark it as a raw finding awaiting triage.
+- `/sdlc-triage` (when asked to include the board source) pulls all `triage-inbox` tasks via `clickup_filter_tasks`, verifies + classifies them, and on action removes the tag (and closes, for the `reject` lane).
+- This is a **tag**, not a status — no per-list status configuration is required. Works on any board.
+
+For projects without a task board, the equivalent inbox is the Markdown buffer `.claude/walkthrough.md` (one finding per `## ` heading or `- ` bullet).
+
 ## Resolution order
 
 When a skill resolves config:
