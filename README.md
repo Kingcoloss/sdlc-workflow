@@ -57,13 +57,13 @@ Then enable via `/plugin` in Claude Code.
 
 ### Option B — marketplace
 
-This repo self-hosts a marketplace named **`kanganapong-private`** (`.claude-plugin/marketplace.json`), so the same git repo is *both* the plugin and its catalog. Two ways to register it:
+This repo self-hosts a marketplace named **`Kingcoloss`** (`.claude-plugin/marketplace.json`), so the same git repo is *both* the plugin and its catalog. Two ways to register it:
 
 **From the GitHub repo (shareable):**
 
 ```
 /plugin marketplace add Kingcoloss/sdlc-workflow
-/plugin install sdlc-workflow@kanganapong-private
+/plugin install sdlc-workflow@Kingcoloss
 ```
 
 Use the GitHub `owner/repo` shorthand (above). A full git URL works too **but must end in `.git`** — `…/sdlc-workflow.git` — otherwise Claude Code may treat the bare URL as a direct link to a hosted `marketplace.json` instead of cloning the repo. The marketplace entry fetches the plugin via a **`url` (HTTPS) source** (`https://github.com/Kingcoloss/sdlc-workflow.git`) rather than a `github` source on purpose: the `github` plugin source clones over **SSH** (`git@github.com:…`), which fails on machines without an SSH key + `known_hosts` entry; an HTTPS `url` source clones without SSH. (Relative-path sources would not resolve for URL-added marketplaces at all.)
@@ -72,12 +72,12 @@ Use the GitHub `owner/repo` shorthand (above). A full git URL works too **but mu
 
 ```
 /plugin marketplace add ~/Documents/Private/claude-plugins/sdlc-workflow
-/plugin install sdlc-workflow@kanganapong-private
+/plugin install sdlc-workflow@Kingcoloss
 ```
 
-After pushing updates, refresh the catalog with `/plugin marketplace update kanganapong-private`.
+After pushing updates, refresh the catalog with `/plugin marketplace update Kingcoloss`.
 
-> The parent directory `~/Documents/Private/claude-plugins/` also carries a `kanganapong-private` marketplace (with `source: ./sdlc-workflow`) for multi-plugin local use. It is **not** a git repo, so it cannot be added by URL — use this repo's URL for that.
+> The parent directory `~/Documents/Private/claude-plugins/` also carries a `Kingcoloss` marketplace (with `source: ./sdlc-workflow`) for multi-plugin local use. It is **not** a git repo, so it cannot be added by URL — use this repo's URL for that.
 
 ## Configure per project
 
