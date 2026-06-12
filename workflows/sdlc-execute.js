@@ -15,6 +15,8 @@ export const meta = {
 //
 // args contract:
 //   plan: { ... }                    REQUIRED — output of sdlc-plan
+//     tasks[].context_brief?: string // main-loop-authored, session-grounded brief;
+//                                    // prepended (authoritative) to each sub-agent's prompt
 //   config: { ... }                  REQUIRED — same shape as sdlc-plan; can extend with:
 //     useWorktreeIsolation?: boolean // run parallel devs in separate git worktrees (safer, slower)
 //     reviewDimensions?: string[]    // default ['code','architecture','integration','e2e','security']
@@ -111,6 +113,14 @@ phase('Develop')
 const taskById = {}
 for (const t of plan.tasks) taskById[t.id] = t
 
+// Soft guard (non-breaking): high/urgent tasks fanned out on the mechanical wrap
+// alone are scope-drift prone. The main loop should fill plan.tasks[].context_brief
+// at Gate A. Warn, don't fail — plans predating context_brief still run.
+const missingBrief = plan.tasks.filter(t => (t.severity === 'urgent' || t.severity === 'high') && !t.context_brief)
+if (missingBrief.length) {
+  log(`⚠ ${missingBrief.length} high/urgent task(s) missing context_brief: ${missingBrief.map(t => t.id).join(', ')} — running on mechanical wrap only (scope-drift risk). Main loop should fill plan.tasks[].context_brief before execute.`)
+}
+
 const devResults = []
 for (let waveIdx = 0; waveIdx < plan.execution_order.length; waveIdx++) {
   const wave = plan.execution_order[waveIdx]
@@ -133,6 +143,9 @@ for (let waveIdx = 0; waveIdx < plan.execution_order.length; waveIdx++) {
     if (useWorktree && wave.length > 1) opts.isolation = 'worktree'
 
     const devPrompt = [
+      task.context_brief
+        ? `MAIN-LOOP CONTEXT BRIEF (authoritative — read FIRST; this is session context you do NOT otherwise have):\n${task.context_brief}\n`
+        : '',
       task.sub_agent_prompt_wrap || `GOAL: ${plan.requirement}\nSCOPE: ${task.title}`,
       '',
       'ADDITIONAL CONTEXT:',

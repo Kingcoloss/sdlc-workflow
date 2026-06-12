@@ -23,6 +23,7 @@ Invoke the `sdlc-execute` Workflow against an approved plan: fan-out sub-agents 
 
 - Read the plan JSON.
 - Read `.claude/sdlc-log.md` to confirm Gate-A approval timestamp.
+- **Confirm `context_brief` is filled** for each task in the upcoming waves. The workflow prepends `task.context_brief` (main-loop session context) above the mechanical wrap and logs a ⚠ for any high/urgent task missing it. If a high/urgent task has none, author it now (resolved grey-zones, invariants not to break, cross-task seams — see `references/sub-agent-wrap.md`) and write it back to the plan JSON before invoking.
 - If `plan.execution_order` contains a wave with `useWorktreeIsolation` recommended (multiple non-disjoint file sets), prompt user once to confirm worktree mode.
 
 ### Step 2 — Invoke the Workflow
@@ -77,9 +78,11 @@ Also save the full execute result to `.claude/sdlc-execute-<status>.json` for au
 - ❌ Do NOT include `Goal-prompt.md` in `git add`/`git commit` automatically.
 - ❌ Do NOT mark UAT as passed based on review verdict alone — UAT requires explicit user observation.
 - ❌ Do NOT proceed past `overall_status: blocked` — escalate grey_zones to user.
+- ❌ Do NOT fan out high/urgent tasks with an empty `context_brief` — fill it first so sub-agents inherit the main-loop's session judgement.
 - ❌ Do NOT use `Workflow({ name: "sdlc-execute" })` — must use `scriptPath` with `${CLAUDE_PLUGIN_ROOT}`.
 
 ## Refs
 
 - `references/post-uat-gates.md` — Gate B specifics
 - `references/severity-matrix.md` — how worker model is selected
+- `references/sub-agent-wrap.md` — two-layer prompt: mechanical wrap + main-loop `context_brief`

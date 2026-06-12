@@ -71,6 +71,7 @@ When the workflow returns:
    - Severity/agent assignments OK? (yes / adjust per task)
    - Open questions answered? (require user answers before execute)
    - Task-board entries: create now via MCP, or skip?
+4. **Author per-task `context_brief`** (after approval, before any fan-out): the workflow leaves `plan.tasks[].context_brief` null because a workflow sub-agent lacks your session context. YOU (main loop) fill it — for each task that will be fanned out, write the session-grounded context the cold sub-agent cannot re-derive: resolved grey-zones/decisions, invariants it must NOT break (name them), cross-task seams it touches, related-project/graph insights. Write it back into `.claude/sdlc-plan.json`. Leave null only for trivial self-contained tasks. See `references/sub-agent-wrap.md` (two-layer model).
 
 ### Step 5 — Persist checkpoint
 
@@ -106,4 +107,5 @@ severityMatrix:
 - ❌ Do NOT invoke `sdlc-execute` automatically after planning — Gate A requires explicit user reply.
 - ❌ Do NOT create task-board entries unless user explicitly approves in Gate A.
 - ❌ Do NOT skip the research phase, even if you "already know the codebase".
+- ❌ Do NOT hand a plan to `/sdlc-execute` with high/urgent tasks whose `context_brief` is still null — the mechanical wrap alone loses the session judgement and invites scope drift.
 - ❌ Do NOT use `Workflow({ name: "sdlc-plan" })` — must use `scriptPath` with `${CLAUDE_PLUGIN_ROOT}`.

@@ -257,7 +257,12 @@ const taskSpecs = riskEval.tasks.map(t => {
       agentType: assigned.agentType || null,
       note: assigned.note || null,
     },
+    // Layer 1 (mechanical): scope/files/tests, generated from task fields here.
     sub_agent_prompt_wrap: SUB_AGENT_PROMPT_WRAP(t),
+    // Layer 2 (judgement): session-grounded brief the MAIN LOOP authors at Gate A
+    // before execute — resolved grey-zones, invariants not to break, cross-task
+    // seams. Left null here: a workflow sub-agent lacks the main-loop's context.
+    context_brief: null,
   }
 })
 
@@ -278,7 +283,17 @@ return {
     'GATE A (main-loop responsibility):',
     '1. Present this plan to user.',
     '2. Ask: approve breakdown? confirm severity/agent assignments? answer open_questions?',
-    '3. On approval, optionally create task-board entries (ClickUp/Linear/Jira/etc.) using config.taskBoard.',
-    '4. Invoke sdlc-execute workflow with args: { plan: <this object>, config: <same config> }.',
+    '3. Author a per-task `context_brief` (see CONTEXT BRIEF below) before any fan-out.',
+    '4. On approval, optionally create task-board entries (ClickUp/Linear/Jira/etc.) using config.taskBoard.',
+    '5. Invoke sdlc-execute workflow with args: { plan: <this object>, config: <same config> }.',
+    '',
+    'CONTEXT BRIEF (step 3) — for each task that will be fanned out, fill task.context_brief',
+    'with a tight, session-grounded summary the cold sub-agent CANNOT re-derive on its own:',
+    '  - resolved grey-zones / decisions made this session,',
+    '  - invariants it must NOT break (name them, e.g. "existing X contract stays green"),',
+    '  - cross-task seams it touches and who owns the other side,',
+    '  - related-project / graph insights relevant to its files.',
+    'The mechanical sub_agent_prompt_wrap already covers scope/files/tests; context_brief carries',
+    'the JUDGEMENT only the main loop holds. Leave it null only for trivial, self-contained tasks.',
   ].join('\n'),
 }

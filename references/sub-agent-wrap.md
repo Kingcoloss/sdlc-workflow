@@ -28,6 +28,19 @@ Sub-agents do NOT inherit the parent session's hooks, memory, or system prompts.
 
 The wrap pins them to a contract.
 
+## Two layers: mechanical wrap + main-loop context brief
+
+A cold sub-agent is missing two different things, so the dispatched prompt has two layers:
+
+| Layer | Field | Author | Carries |
+|-------|-------|--------|---------|
+| 1 — mechanical | `task.sub_agent_prompt_wrap` | `sdlc-plan.js` (auto, from task fields) | scope, files-in/out, tools, test scenarios/cases |
+| 2 — judgement | `task.context_brief` | **main loop, at Gate A** (full session context) | resolved grey-zones, invariants not to break, cross-task seams, related-project/graph insights |
+
+Layer 1 alone tells a sub-agent *what* file to touch; it cannot tell it *why this decision was made* or *what must not break* — that knowledge lives only in the main loop's session, which the workflow's own planning sub-agents never saw. When `context_brief` is present, `sdlc-execute.js` prepends it (marked authoritative — read first) above the mechanical wrap. When absent, `sdlc-execute.js` logs a ⚠ for any high/urgent task so the gap is visible rather than silent.
+
+**Rule of thumb:** fill `context_brief` for every task that touches a shared seam, a known invariant, or a grey-zone you resolved this session. Leave it null only for trivial, self-contained work.
+
 ## Per-project adjustments
 
 If your project uses a non-standard tooling stack, override `config.tools` in `.claude/sdlc.local.md`. Common values:
