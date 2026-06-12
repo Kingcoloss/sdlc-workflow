@@ -1,6 +1,6 @@
 {
   "name": "sdlc-workflow",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Agile-Scrum SDLC orchestrator for any software project — init/plan/execute/triage/review/standup/resume slash commands with hard user-approval gates between workflow phases.",
   "author": {
     "name": "kanganapong sriduang",

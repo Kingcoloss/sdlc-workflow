@@ -16,7 +16,7 @@
         "url": "https://github.com/Kingcoloss/sdlc-workflow.git"
       },
       "description": "Agile-Scrum SDLC orchestrator for any software project — init/plan/execute/triage/review workflows with hard user-approval gates.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "author": {
         "name": "kanganapong sriduang",
         "email": "sridung1111@gmail.com"
